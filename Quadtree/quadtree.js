@@ -86,6 +86,20 @@ Quadtree.prototype.queryRange = function(box){
 
 Quadtree.prototype.queryPoint = function(point){
   //return point/value pair if tree contains point
+  if (this.value !== null){
+    if (this.value[0].point.x === point.x && this.value[0].point.y === point.y){
+      return this.value[0].value;
+    }
+  }
+
+  if (this.children !== null){
+    var val = null;
+    _.each.(this.children, function(child){
+      val = val || child.queryPoint(point);
+    });
+  }
+
+  return null;
 };
 
 Quadtree.prototype.clear = function(){
