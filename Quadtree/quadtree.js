@@ -34,6 +34,7 @@ Quadtree.prototype.insert = function(point, object){
 };
 
 Quadtree.prototype.subdivide = function(){
+  //use box quadrant method to create 4 new equal child quadrants
   this.children = [];
   var b = this.box.getQuadrant(0);
   this.children.push(new Quadtree(b));
@@ -47,7 +48,7 @@ Quadtree.prototype.subdivide = function(){
   b = this.box.getQuadrant(3);
   this.children.push(new Quadtree(b));
 
-
+  //try inserting each value into the new child nodes
   _.each(this.value, function(obj, index, list){
     _.each(this.children, function(child, ind, l){
       child.insert(obj.point, obj.value);
@@ -94,7 +95,7 @@ Quadtree.prototype.queryPoint = function(point){
 
   if (this.children !== null){
     var val = null;
-    _.each.(this.children, function(child){
+    _.each(this.children, function(child){
       val = val || child.queryPoint(point);
     });
   }
