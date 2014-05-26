@@ -1,3 +1,5 @@
+'use strict';
+
 var Quadtree = function(box, max){
   this.box = box;
   this.children = null;
@@ -35,19 +37,10 @@ Quadtree.prototype.insert = function(point, object){
 
 Quadtree.prototype.subdivide = function(){
   //use box quadrant method to create 4 new equal child quadrants
-  this.children = [];
-  var b = this.box.getQuadrant(0);
-  this.children.push(new Quadtree(b));
-
-  b = this.box.getQuadrant(1);
-  this.children.push(new Quadtree(b));
-
-  b = this.box.getQuadrant(2);
-  this.children.push(new Quadtree(b));
-
-  b = this.box.getQuadrant(3);
-  this.children.push(new Quadtree(b));
-
+  this.children = this.box.split();
+  _.each(this.children, function(child, i, container){
+    container[i] = new Quadtree(child);
+  });
   //try inserting each value into the new child nodes
   _.each(this.value, function(obj, index, list){
     _.each(this.children, function(child, ind, l){
@@ -59,6 +52,7 @@ Quadtree.prototype.subdivide = function(){
 Quadtree.prototype.queryRange = function(box){
   //return all point/value pairs contained in range
   //if query area doesn't overlap this box, return
+  debugger;
   if (!this.box.overlaps(box)){
     return [];
   }
@@ -76,6 +70,7 @@ Quadtree.prototype.queryRange = function(box){
   //if has children, then make recursive call on children 
   if(this.children !== null){
     _.each(this.children, function(child){
+      debugger;
       intersection = intersection.concat(child.queryRange(box));
     });
     return intersection;

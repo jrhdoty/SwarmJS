@@ -2,10 +2,11 @@
 
 describe('Quadtree', function () {
   'use strict';
-  var quad, box, point;
+  var quad, box, point, point1;
   beforeEach(function(){
     point = new Point(0, 0);
-    box   = new Box(point, 100, 100);
+    point1 = new Point(100, 100);
+    box   = new Box(point, point1);
     quad  = new Quadtree(box);
   });
 
@@ -45,37 +46,6 @@ describe('Quadtree', function () {
     expect(quad.children[2].value.length).to.equal(1);
   });
 
-  it('subdivide should create child nodes with the correct areas', function(){
-    var p = new Point(11, 14.2);
-    var b = new Box(p, 18.6, 18.2);
-    quad = new Quadtree(b);
-
-    var point1 = new Point(16.2, 15.8);
-    var point2 = new Point(20, 20);
-    quad.insert(point1);
-    quad.insert(point2);
-    expect(quad.children.length).to.equal(4);
-
-    expect(quad.children[0].box.vertex.x).to.equal(quad.box.vertex.x);
-    expect(quad.children[0].box.vertex.y).to.equal(quad.box.vertex.y);
-    expect(quad.children[0].box.width).to.equal(quad.box.width/2.0);
-    expect(quad.children[0].box.height).to.equal(quad.box.height/2.0);
-
-    expect(quad.children[1].box.vertex.x).to.equal(quad.box.vertex.x+ quad.box.width/2.0);
-    expect(quad.children[1].box.vertex.y).to.equal(quad.box.vertex.y);
-    expect(quad.children[1].box.width).to.equal(quad.box.width/2.0);
-    expect(quad.children[1].box.height).to.equal(quad.box.height/2.0);
-
-    expect(quad.children[2].box.vertex.x).to.equal(quad.box.vertex.x+quad.box.width/2.0);
-    expect(quad.children[2].box.vertex.y).to.equal(quad.box.vertex.y+quad.box.height/2.0);
-    expect(quad.children[2].box.width).to.equal(quad.box.width/2.0);
-    expect(quad.children[2].box.height).to.equal(quad.box.height/2.0);
-
-    expect(quad.children[3].box.vertex.x).to.equal(quad.box.vertex.x);
-    expect(quad.children[3].box.vertex.y).to.equal(quad.box.vertex.y+quad.box.height/2.0);
-    expect(quad.children[3].box.width).to.equal(quad.box.width/2.0);
-    expect(quad.children[3].box.height).to.equal(quad.box.height/2.0);
-  });
 
   it('queryRange should return all points contained in the input box in the tree', function(){
     var p  = new Point(11, 14.2);   //should be in quad 0
@@ -85,7 +55,8 @@ describe('Quadtree', function () {
     quad.insert(p).insert(p1).insert(p2).insert(p3);
 
     p = new Point(5, 5);
-    var box = new Box(p, 10, 10);
+    p1 = new Point(15, 15);
+    var box = new Box(p, p1);
 
     var result = quad.queryRange(box);
     expect(result.length).to.equal(1);
@@ -94,14 +65,16 @@ describe('Quadtree', function () {
     expect(result[0].value).to.equal(undefined);
 
     p = new Point(5, 5);
-    box = new Box(p, 63, 20);
+    p1 = new Point(68, 25);
+    box = new Box(p, p1);
 
     result = quad.queryRange(box);
     expect(result.length).to.equal(2);
 
     p = new Point(0, 0);
-    box = new Box(p, 100, 100);
-
+    p1 = new Point(100, 100);
+    box = new Box(p, p1);
+    debugger;
     result = quad.queryRange(box);
     expect(result.length).to.equal(4);    
   });

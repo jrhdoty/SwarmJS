@@ -2,7 +2,7 @@
 
 describe('Box', function () {
   'use strict';
-  var box, box2, box3;
+  var box, box2, box3, box4;
   var point, point1, point2, point3, point4, point5, point6, point7;
 
   beforeEach(function(){
@@ -19,6 +19,7 @@ describe('Box', function () {
     box  = new Box(point, point2);
     box2 = new Box(point1, point3);
     box3 = new Box(point6, point7);
+    box4 = new Box(point, point2);
   });
 
   it('exists', function () {
@@ -39,6 +40,14 @@ describe('Box', function () {
   it('detects an overlap correctly', function(){
     expect(box.overlaps(box2)).to.equal(true);
     expect(box.overlaps(box3)).to.equal(false);
+    expect(box.overlaps(box4)).to.equal(true);
+
+    var b = new Box(new Point(5, 0), new Point(10, 5));
+    expect(box.overlaps(b)).to.equal(true);
+
+    var b = new Box(new Point(50, 0), new Point(100, 50));
+    var b1 = new Box(new Point(0, 0), new Point(100, 100));
+    expect(b.overlaps(b1)).to.equal(true);
   });
 
   it('returns correct quadrants when split', function(){

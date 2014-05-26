@@ -7,7 +7,7 @@ var Point = function(x, y){
 
 //strict less than
 Point.prototype.lt = function(point){
-  if(this.x < point.x && this.y < point.y){
+  if(this.x <= point.x && this.y <= point.y){
     return true;
   }
   return false;
@@ -15,7 +15,7 @@ Point.prototype.lt = function(point){
 
 //strict greater than
 Point.prototype.gt = function(point){
-  if (this.x > point.x && this.y > point.y){
+  if (this.x >= point.x && this.y >= point.y){
     return true;
   }
   return false;
@@ -28,9 +28,8 @@ var Box = function(least, greatest){
   this.high = greatest;
 };
 
-
 Box.prototype.containsPoint = function(point){
-  //if point is not strictly less than least and not strictly greater than greatest, it is contained
+  //if point is not strictly less than or equal to least and not strictly greater than or equal to greatest, it is contained
   if(this.low.lt(point) && this.high.gt(point)){
     return true;
   }
@@ -39,7 +38,8 @@ Box.prototype.containsPoint = function(point){
 
 Box.prototype.overlaps = function(box){
   //if this contains either point of box, then there is an overlap
-  if(this.containsPoint(box.low) || this.containsPoint(box.high)){
+  if(this.containsPoint(box.low) || this.containsPoint(box.high) || 
+     box.containsPoint(this.low) || box.containsPoint(this.high)){
       return true;
   }
   return false;
