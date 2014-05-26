@@ -1,45 +1,67 @@
+'use strict';
+
 var Point = function(x, y){
   this.x = x;
   this.y = y;
 };
 
-var Box = function(vertex, width, height){
-  this.vertex = vertex;
-  this.width = width;
-  this.height = height;
+//strict less than
+Point.prototype.lt = function(point){
+  if(this.x < point.x && this.y < point.y){
+    return true;
+  }
+  return false;
+};
+
+//strict greater than
+Point.prototype.gt = function(point){
+  if (this.x > point.x && this.y > point.y){
+    return true;
+  }
+  return false;
+};
+
+//generalized box class, defined by two points with lessThan (lt) and greaterThan (gt) functions
+//these functions are strict across two dimensions
+var Box = function(least, greatest){
+  this.low = least;
+  this.high = greatest;
 };
 
 
 Box.prototype.containsPoint = function(point){
-  if(this.vertex.x <= point.x && this.vertex.x+this.width >= point.x && 
-    this.vertex.y <= point.y && this.vertex.y+this.height >= point.y ){
+  //if point is not strictly less than least and not strictly greater than greatest, it is contained
+  if(this.low.lt(point) && this.high.gt(point)){
     return true;
   }
   return false;
 };
 
 Box.prototype.overlaps = function(box){
-  if(this.vertex.x > box.vertex.x+box.width   || this.vertex.y > box.vertex.y+box.height ||
-     box.vertex.x  > this.vertex.x+this.width || box.vertex.y  > this.vertex.y+this.height){
-      return false;
+  //if this contains either point of box, then there is an overlap
+  if(this.containsPoint(box.low) || this.containsPoint(box.high)){
+      return true;
   }
-  return true;
+  return false;
 };
 
-//start in top left and move clockwise, 0-3
-Box.prototype.getQuadrant = function(quad){
-  var w = this.width/2.0;
-  var h = this.height/2.0;
-
-  if(quad === 0){
-    return new Box(new Point(this.vertex.x, this.vertex.y), w, h);
-  } else if(quad === 1) {
-    return new Box(new Point(this.vertex.x+w, this.vertex.y), w, h);
-  } else if(quad === 2){
-    return new Box(new Point(this.vertex.x+w, this.vertex.y+h), w, h);
-  } else if(quad ===3){
-    return new Box(new Point(this.vertex.x, this.vertex.y+h), w, h);    
-  }
-
-  return;
+//this still needs to be generalized so not just utilizing division
+Box.prototype.split = function(){
+  var result = [];
+  result.push(new Box(this.low, new Point((this.low.x+this.high.x)/2, (this.low.y+this.high.y)/2)));
+  result.push(new Box(new Point((this.low.x+this.high.x)/2, this.low.y), 
+              new Point(this.high.x, (this.low.y+this.high.y)/2)));
+  result.push(new Box(new Point((this.low.x+this.high.x)/2, (this.low.y+this.high.y)/2), this.high));
+  result.push(new Box(new Point(this.low.x, (this.low.y+this.high.y)/2), 
+              new Point((this.low.x+this.high.x)/2, this.high.y)));
+  return result;
 };
+
+
+
+
+
+
+
+
+
