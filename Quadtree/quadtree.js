@@ -28,9 +28,9 @@ Quadtree.prototype.insert = function(point, object){
     }
   }
   // if is not a root node, call insert on child nodes
-  _.each(this.children, function(child, index, list){
-    child.insert(point, object);
-  });
+  for(var i = 0; i < this.children.length; i++){
+    this.children[i].insert(point, object);
+  }
   this.value = null;
   return this;
 };
@@ -38,41 +38,39 @@ Quadtree.prototype.insert = function(point, object){
 Quadtree.prototype.subdivide = function(){
   //use box quadrant method to create 4 new equal child quadrants
   this.children = this.box.split();
-  _.each(this.children, function(child, i, container){
-    container[i] = new Quadtree(child);
-  });
+  for(var i = 0; i < this.children.length; i++){
+    this.children[i] = new Quadtree(this.children[i]);
+  }
   //try inserting each value into the new child nodes
-  _.each(this.value, function(obj, index, list){
-    _.each(this.children, function(child, ind, l){
-      child.insert(obj.point, obj.value);
-    }, this);
-  }, this);
+  for(i = 0; i < this.value.length; i++){
+    for(var k = 0; k < this.children.length; k++){
+      this.children[k].insert(this.value[i].point, this.value[i].value);
+    }
+  }
 };
 
 Quadtree.prototype.queryRange = function(box){
   //return all point/value pairs contained in range
   //if query area doesn't overlap this box, return
-  debugger;
   if (!this.box.overlaps(box)){
     return [];
   }
   //if root node with contained value(s), then check against contained objects
   var intersection = [];
   if(this.value !== null){
-    _.each(this.value, function(val){
-      if(box.containsPoint(val.point)){
-        intersection.push(val);
+    for(var i = 0; i < this.value.length; i++){
+      if(box.containsPoint(this.value[i].point)){
+        intersection.push(this.value[i]);
       }
-    });
+    }
     return intersection;
   }
 
   //if has children, then make recursive call on children 
   if(this.children !== null){
-    _.each(this.children, function(child){
-      debugger;
-      intersection = intersection.concat(child.queryRange(box));
-    });
+    for(var i = 0; i < this.children.length; i++){
+      intersection = intersection.concat(this.children[i].queryRange(box));
+    }
     return intersection;
   }
 
@@ -81,7 +79,11 @@ Quadtree.prototype.queryRange = function(box){
 };
 
 Quadtree.prototype.queryPoint = function(point){
-  //return point/value pair if tree contains point
+  //return value if tree contains point
+  if(!this.box.containsPoint(point)){
+    return null;
+  }
+
   if (this.value !== null){
     if (this.value[0].point.x === point.x && this.value[0].point.y === point.y){
       return this.value[0].value;
@@ -90,9 +92,10 @@ Quadtree.prototype.queryPoint = function(point){
 
   if (this.children !== null){
     var val = null;
-    _.each(this.children, function(child){
-      val = val || child.queryPoint(point);
-    });
+    for(var i = 0; i < this.children.length; i++){
+      val = val || this.children[i].queryPoint(point);
+    }
+    return val;
   }
 
   return null;
