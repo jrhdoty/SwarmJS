@@ -58,13 +58,14 @@ describe('Quadtree', function () {
   });
 
   it('subdivide should correctly subdivide and then insert value to the correct child nodes', function(){
-    var point1 = new Point(10, 15);
-    var point2 = new Point(75, 75);
-    quad.insert(point1);
-    quad.insert(point2);
+
+    for (var i = 0; i < 11; i++){
+      var point1 = new Point(i*10, i*10);
+      quad.insert(point1);
+    }
     expect(quad.children.length).to.equal(4);
-    expect(quad.children[0].value.length).to.equal(1);
-    expect(quad.children[2].value.length).to.equal(1);
+    expect(quad.children[0].value.length).to.equal(6);
+    expect(quad.children[2].value.length).to.equal(6);
   });
 
 
