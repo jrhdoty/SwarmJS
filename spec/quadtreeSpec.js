@@ -29,6 +29,27 @@ describe('Quadtree', function () {
     expect(quad.value[0].point).to.equal(point);
   });
 
+  it('should correctly insert and contain many elements', function(){
+    var points = [];
+    var x, y, p;
+
+    for(var i = 0; i < 1000; i++){
+      x = Math.random()*100;
+      y = Math.random()*100;
+      p = new Point(x, y);
+      points.push(p);
+      quad.insert(p, true);
+    }
+
+    var contains = true;
+    for( i = 0; i < points.length; i++){
+      if(!quad.queryPoint(points[i])){
+        contains = false;
+      }
+    }
+    expect(contains).to.equal(true);
+  });
+
   it('subdivide should correctly generate four child nodes', function(){
     var point = new Point(10, 15);
     quad.insert(point);
@@ -74,7 +95,6 @@ describe('Quadtree', function () {
     p = new Point(0, 0);
     p1 = new Point(100, 100);
     box = new Box(p, p1);
-    debugger;
     result = quad.queryRange(box);
     expect(result.length).to.equal(4);    
   });
