@@ -2,9 +2,9 @@
 
 // var quadtree = require('quadtree');
 
-var Swarm = opts.function(population, originX, originY, width, height){
+var Swarm = function(population, originX, originY, width, height){
   this.population = population || [];
-  this.quadtree = new quadtree(new Box(
+  this.quadtree   = new Quadtree(new Box(
                                         new Point(originX, originY),
                                         new Point(originX+width, originY+height)
                                         ));
@@ -16,15 +16,15 @@ Swarm.prototype.tick = function(){
     this.quadtree.insert(this.population[i].position, this.population[i]);
   }
 
-  //calculate new acceleration for each agent
+  var that = this; 
   for ( i = 0; i < this.population.length; i++ ){
-    //callback takes in area of effect, position vector and list of affecting agents  
+    //callback takes in area of effect, position vector and list of affecting agents 
     this.population[i].calculateNextAcceleration(function(aoe, position, agents){
       //add tests to quadtree to ensure negative values handled correctly
-      var neighbors = this.quadtree.queryRange(new Box(
+      var neighbors = that.quadtree.queryRange(new Box(
                 new Point(position.left-aoe, position.top-aoe),
                 new Point(position.left+aoe, position.top+aoe)));
-      var temp;
+      var temp = [];
       for (var j = 0; j < neighbors.length; j++ ){
         if(agents.indexOfneighbors !== -1){
           temp.push(neighbors[j]);
@@ -37,8 +37,13 @@ Swarm.prototype.tick = function(){
   for( i = 0; i < this.population.length; i++ ){
     this.population[i].update();
   }
+  //clear quadtree
+  this.quadtree.clear();
 };
 
+Swarm.prototype.getPopulation = function(){
+  return this.population;
+};
 
 var Agent = function(opts){
   this.type               = opts.type               || 'default';
@@ -59,17 +64,17 @@ Agent.prototype.update = function(){
   this.updateAcceleration();
 };
 
-Agent.prototype.updateVelocity(){
+Agent.prototype.updateVelocity = function(){
   this.velocity = this.velocity.add(this.acceleration);
 };
 
-Agent.prototype.updatePosition(){
+Agent.prototype.updatePosition = function(){
   this.position = this.position.add(this.velocity);
 };
 
-Agent.prototype.updateAcceleration(){
+Agent.prototype.updateAcceleration = function(){
   this.acceleration = this.nextAcceleration;
-}
+};
 /*
 try to make implementation of calculateAcceleration
 agnostic to 'find neighbor' function while simultaneously not
@@ -79,7 +84,7 @@ callback takes in area of effect, position vector and list of affecting agents
 returns neighbors in affected area
 */
 
-Agent.prototype.calculateNextAcceleration = function(callback){
+Agent.prototype.calculateNextAcceleration = function(callback, bounds){
   var resultantVector = new Vector(0, 0);
 
   /* later allow for arbitrary or random forces that don't eminate from another agent*/
@@ -87,14 +92,15 @@ Agent.prototype.calculateNextAcceleration = function(callback){
     var neighbors = callback(this.forces[i].areaOfEffect, this.position, this.forces[i].causes);    //get set of neighbors within AoE and of causing type
     resultantVector.add(this.forces[i].strength*this.forces[i].calculate(neighbors)); //calculate vector and add to resultant vector
   }
-
   this.nextAcceleration = this.acceleration.add(resultantVector);
-
+  //if bounding function passed in then add to next acceleration
+  // if (bounds){
+  //   this.nextAcceleration = this.nextAcceleration.add(bounds(this));
+  // }
   if (this.nextAcceleration.magnitude() > this.accelerationLimit){
     this.nextAcceleration.unitVector(this.accelerationLimit);
   }
 
-  //add boundary avoidance force
 };
 
 //agent factory factory object
