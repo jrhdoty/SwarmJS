@@ -13,7 +13,7 @@ var Swarm = function(population, originX, originY, width, height){
 Swarm.prototype.tick = function(){
 
   for ( var i = 0; i < this.population.length; i++ ){
-    this.quadtree.insert(this.population[i].position, this.population[i]);
+    this.quadtree.insert(new Point(this.population[i].position.left, this.population[i].position.top), this.population[i]);
   }
 
   var that = this; 
@@ -27,9 +27,10 @@ Swarm.prototype.tick = function(){
       var temp = [];
       for (var j = 0; j < neighbors.length; j++ ){
         if(agents.indexOfneighbors !== -1){
-          temp.push(neighbors[j]);
+          temp.push(neighbors[j].value);
         }
       }
+
       return temp;
     });
   }
@@ -51,8 +52,8 @@ var Agent = function(opts){
   this.position           = opts.position           || new Vector(0,0);
   this.velocity           = opts.velocity           || new Vector(0,0);
   this.acceleration       = opts.acceleration       || new Vector(0,0);
-  this.velocityLimit      = opts.velocityLimit      || 10;
-  this.accelerationLimit  = opts.accelerationLimit  || 10;
+  this.velocityLimit      = opts.velocityLimit      || 2;
+  this.accelerationLimit  = opts.accelerationLimit  || .1;
   this.momentum           = opts.momentum           || 10;
   this.nextAcceleration   = new Vector(0, 0);
 
@@ -66,6 +67,9 @@ Agent.prototype.update = function(){
 
 Agent.prototype.updateVelocity = function(){
   this.velocity = this.velocity.add(this.acceleration);
+  if(this.velocity.magnitude() > this.velocityLimit){
+    this.velocity = this.velocity.unitVector(this.velocityLimit);
+  }
 };
 
 Agent.prototype.updatePosition = function(){
@@ -74,6 +78,9 @@ Agent.prototype.updatePosition = function(){
 
 Agent.prototype.updateAcceleration = function(){
   this.acceleration = this.nextAcceleration;
+  if(this.acceleration.magnitude() > this.accelerationLimit){
+    this.acceleration = this.acceleration.unitVector(this.accelerationLimit);
+  }
 };
 /*
 try to make implementation of calculateAcceleration
@@ -88,9 +95,13 @@ Agent.prototype.calculateNextAcceleration = function(callback, bounds){
   var resultantVector = new Vector(0, 0);
 
   /* later allow for arbitrary or random forces that don't eminate from another agent*/
+  var that = this;
+  var neighbors;
   for ( var i = 0; i < this.forces.length; i++ ){
-    var neighbors = callback(this.forces[i].areaOfEffect, this.position, this.forces[i].causes);    //get set of neighbors within AoE and of causing type
-    resultantVector.add(this.forces[i].strength*this.forces[i].calculate(neighbors)); //calculate vector and add to resultant vector
+    if(this.forces[i].areaOfEffect){
+      neighbors = callback(this.forces[i].areaOfEffect, this.position, this.forces[i].causes);    //get set of neighbors within AoE and of causing type
+    }
+    resultantVector = resultantVector.add(this.forces[i].calculate(that, neighbors).multiplyScalar(this.forces[i].strength)); //calculate vector and add to resultant vector
   }
   this.nextAcceleration = this.acceleration.add(resultantVector);
   //if bounding function passed in then add to next acceleration
