@@ -2,5 +2,7 @@
   "name": "quadtree",
   "private": true,
   "version": "0.0.0",
-  "dependencies": {}
+  "dependencies": {
+    "generic-quadtree": "^0.2.0"
+  }
 }
