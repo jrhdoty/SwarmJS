@@ -1,34 +1,13 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Mocha Spec Runner</title>
-  <link rel="stylesheet" href="bower_components/mocha/mocha.css">
-</head>
-<body>
-  <div id="mocha"></div>
-  <script src="bower_components/mocha/mocha.js"></script>
-  <script>mocha.setup('')</script>
-  <script src="bower_components/chai/chai.js"></script>
-  <script>
-    var assert = chai.assert;
-    var expect = chai.expect;
-    var should = chai.should();
-  </script>
-  <script src="bower_components/underscore/underscore.js"></script>
-  <!-- include source files here... -->
-  <script src="Quadtree/quadtree.js"></script>
-  <script src="Quadtree/box.js"></script>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
 
-
-  <!-- include spec files here... -->
-  <script src="spec/pointSpec.js"></script>
-  <script src="spec/boxSpec.js"></script>
-  <script src="spec/quadtreeSpec.js"></script>
-
-
-  
-  <script>mocha.run()</script>
-</body>
+    <script src="node_modules/generic-quadtree/Quadtree/quadtree.js"></script>
+    <script src="index.js"></script>
+    <script src="animate.js"></script>
+  </body>
 </html>
