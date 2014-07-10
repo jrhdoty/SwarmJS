@@ -26,7 +26,7 @@ Swarm.prototype.tick = function(){
                 new Point(position.left+aoe, position.top+aoe)));
       var temp = [];
       for (var j = 0; j < neighbors.length; j++ ){
-        if(agents.indexOfneighbors !== -1){
+        if(agents.indexOf(neighbors[j].value.type) !== -1){
           temp.push(neighbors[j].value);
         }
       }
@@ -53,8 +53,7 @@ var Agent = function(opts){
   this.velocity           = opts.velocity           || new Vector(0,0);
   this.acceleration       = opts.acceleration       || new Vector(0,0);
   this.velocityLimit      = opts.velocityLimit      || 2;
-  this.accelerationLimit  = opts.accelerationLimit  || .1;
-  this.momentum           = opts.momentum           || 10;
+  this.accelerationLimit  = opts.accelerationLimit  || .3;
   this.nextAcceleration   = new Vector(0, 0);
 
 };
