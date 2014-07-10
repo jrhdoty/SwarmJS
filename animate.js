@@ -38,7 +38,12 @@ function animate() {
 
     context.beginPath();
     // context.fillStyle = 'hsl('+ boid.acceleration.magnitude()*240 + ',100%,50%)';
-    context.fillStyle = '#00CC00';
+    if(boid.type === 'bird'){
+      context.fillStyle = '#00CC00';
+    } else if ( boid.type === 'raptor' ){
+      context.fillStyle = 'red';
+    }
+
     context.fillRect(centerX, centerY, 2, 2);
   }
 
