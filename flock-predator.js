@@ -1,7 +1,7 @@
 var centerOfMass = {
   causes: ['bird'],
   areaOfEffect: 25,
-  strength: .1,
+  strength: .3,
   calculate: function(agent, neighbors){
     //head toward neighbors center of mass
     var result = new Vector(0, 0);
@@ -45,7 +45,7 @@ var matchHeading = {
 var avoidCollisions = {
   causes: ['bird'],
   areaOfEffect: 8,
-  strength: 3,
+  strength: 2,
   calculate: function(agent, neighbors){
     //match heading with neighbors
     var result = new Vector(0, 0);
@@ -103,7 +103,7 @@ var boundaryAvoidance = {
 var avoidPredator = {
   causes: ['raptor'],
   areaOfEffect: 100,
-  strength: 10,
+  strength: 1000,
   calculate: function(agent, neighbors){
     //match heading with neighbors
     var result = new Vector(0, 0);
@@ -191,24 +191,54 @@ var avoidCollisionsRaptor = {
   }
 };
 
+var centerOfMassRaptor = {
+  causes: ['bird'],
+  areaOfEffect: 100,
+  strength: 1,
+  calculate: function(agent, neighbors){
+    //head toward neighbors center of mass
+    var result = new Vector(0, 0);
+    if(neighbors.length === 0){
+      return result;
+    }
+
+    for (var i = 0; i < neighbors.length; i++) {
+      result = result.add(neighbors[i].position);
+    }
+
+    result.top /= neighbors.length;     //find the center of mass
+    result.top -=agent.position.top;   //find the difference b/w current position and CoM
+    result.left /= neighbors.length;      //same as above
+    result.left -= agent.position.left;
+    return result;
+  }
+};
 
 var opts = {
   type:     'bird',
   forces:   [centerOfMass, matchHeading, avoidCollisions, momentum, boundaryAvoidance, avoidPredator],
   position: new Vector(100, 100),
   velocity:  new Vector(1, 1),
+  velocityLimit: 2.25,
+  accelerationLimit: .5
 };
 
 var optsRaptor = {
   type: 'raptor',
-  forces: [momentum, boundaryAvoidance, centerOfMassRaptor, matchHeadingRaptor, avoidCollisionsRaptor],
+  forces: [momentum, boundaryAvoidance, centerOfMassRaptor, matchHeadingRaptor, avoidCollisionsRaptor, centerOfMassRaptor],
   position: new Vector(100, 100),
   velocity:  new Vector(1, 1), 
+  velocityLimit: 1.75,
+  accelerationLimit: .3
 };
+
+
+  this.velocityLimit      = opts.velocityLimit      || 2;
+  this.accelerationLimit  = opts.accelerationLimit  || .3;
 
 var population = [];
 population.push(new Agent(opts));
-for( var i = 0; i < 1000; i++ ){
+for( var i = 0; i < 500; i++ ){
   opts.position = new Vector(Math.random()*window.innerWidth, Math.random()*window.innerHeight);
   opts.velocity = new Vector((Math.random()-.5)*1, (Math.random()-.5)*1);
   population.push(new Agent(opts));
