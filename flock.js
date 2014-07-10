@@ -24,7 +24,7 @@ var centerOfMass = {
 var matchHeading = {
   causes: ['bird'],
   areaOfEffect: 25,
-  strength: 20,
+  strength: 15,
   calculate: function(agent, neighbors){
     //match heading with neighbors
     var result = new Vector(0, 0);
@@ -44,8 +44,8 @@ var matchHeading = {
 
 var avoidCollisions = {
   causes: ['bird'],
-  areaOfEffect: 10,
-  strength: 5,
+  areaOfEffect: 8,
+  strength: 30,
   calculate: function(agent, neighbors){
     //match heading with neighbors
     var result = new Vector(0, 0);
