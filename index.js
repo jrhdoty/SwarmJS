@@ -1,7 +1,5 @@
 'use strict'
 
-// var quadtree = require('quadtree');
-
 var Swarm = function(population, originX, originY, width, height){
   this.population = population || [];
   this.quadtree   = new Quadtree(new Box(
@@ -11,16 +9,15 @@ var Swarm = function(population, originX, originY, width, height){
 };
 
 Swarm.prototype.tick = function(){
-
+  //insert all agents into quadtree
   for ( var i = 0; i < this.population.length; i++ ){
     this.quadtree.insert(new Point(this.population[i].position.left, this.population[i].position.top), this.population[i]);
   }
-
+  //calcualate next acceleration of each agent
   var that = this; 
   for ( i = 0; i < this.population.length; i++ ){
-    //callback takes in area of effect, position vector and list of affecting agents 
+    //callback takes in area of effect, position vector and list of affecting agents
     this.population[i].calculateNextAcceleration(function(aoe, position, agents){
-      //add tests to quadtree to ensure negative values handled correctly
       var neighbors = that.quadtree.queryRange(new Box(
                 new Point(position.left-aoe, position.top-aoe),
                 new Point(position.left+aoe, position.top+aoe)));
@@ -30,7 +27,6 @@ Swarm.prototype.tick = function(){
           temp.push(neighbors[j].value);
         }
       }
-
       return temp;
     });
   }
@@ -81,6 +77,8 @@ Agent.prototype.updateAcceleration = function(){
     this.acceleration = this.acceleration.unitVector(this.accelerationLimit);
   }
 };
+
+
 /*
 try to make implementation of calculateAcceleration
 agnostic to 'find neighbor' function while simultaneously not
@@ -112,52 +110,4 @@ Agent.prototype.calculateNextAcceleration = function(callback, bounds){
   }
 
 };
-
-//agent factory factory object
-var AgentFactory = function(opts){
-
-};
-
-AgentFactory.prototype.create = function(num){
-
-};
-
-
-
-var Vector = function(left, top){
-  this.top  = top  || 0;
-  this.left = left || 0;
-};
-
-Vector.prototype.add = function(v2){
-  var t = this.top;
-  var l = this.left;
-  for (var i = 0; i < arguments.length; i++){
-    t += arguments[i].top;
-    l += arguments[i].left;
-  }
-  return new Vector(l, t);
-};
-
-Vector.prototype.distance = function(v2){
-  return Math.sqrt(Math.pow((this.left-v2.left), 2) + Math.pow((this.top-v2.top), 2));
-};
-
-Vector.prototype.multiplyScalar = function(val){
-  this.top  *= val;
-  this.left *= val;
-  return this;
-};
-
-Vector.prototype.magnitude = function(){
-  return this.distance(this.origin);
-};
-
-Vector.prototype.unitVector = function(limit){
-  limit = limit || 1;
-  var m = this.magnitude() || 1;
-  return new Vector(this.left*limit/m, this.top*limit/m);
-};
-
-Vector.prototype.origin = new Vector(0, 0);
 
