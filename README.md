@@ -90,3 +90,27 @@ function animate() {
   raf(animate);
 }
 raf(animate());
+```
+
+**new Agent({options})**
+
+The list of all possible options are:
+- type
+- forces
+- position
+- velocity
+- acceleration
+- velocityLimit
+- accelerationLimit
+
+**new Swarm(agents, originX, originY, width, height)**
+
+Instantiate a new swarm with an array of Agents and the bounds of the simulation
+
+**Swarm.tick()**
+
+Update the simulation by calculating the new acceleration, velocity and position of each agent in the population.
+
+**Swarm.forEach(callback)**
+
+Iterate over each agent in Swarm and pass it to the callback 
