@@ -1,4 +1,9 @@
 'use strict'
+var Vector    = require('./lib/vector');
+var QT        = require('generic-quadtree');
+var Quadtree  = QT.Quadtree;
+var Box       = QT.Box;
+var Point     = QT.Point;
 
 var Swarm = function(population, originX, originY, width, height){
   this.population = population || [];
@@ -9,14 +14,13 @@ var Swarm = function(population, originX, originY, width, height){
 };
 
 Swarm.prototype.tick = function(){
-  //insert all agents into quadtree
   for ( var i = 0; i < this.population.length; i++ ){
     this.quadtree.insert(new Point(this.population[i].position.left, this.population[i].position.top), this.population[i]);
   }
-  //calcualate next acceleration of each agent
+
   var that = this; 
+
   for ( i = 0; i < this.population.length; i++ ){
-    //callback takes in area of effect, position vector and list of affecting agents
     this.population[i].calculateNextAcceleration(function(aoe, position, agents){
       var neighbors = that.quadtree.queryRange(new Box(
                 new Point(position.left-aoe, position.top-aoe),
@@ -38,8 +42,10 @@ Swarm.prototype.tick = function(){
   this.quadtree.clear();
 };
 
-Swarm.prototype.getPopulation = function(){
-  return this.population;
+Swarm.prototype.forEach = function(callback){
+  for (var i = 0; i < this.population.length; i++){
+    callback(this.population[i]);
+  }
 };
 
 var Agent = function(opts){
@@ -78,20 +84,8 @@ Agent.prototype.updateAcceleration = function(){
   }
 };
 
-
-/*
-try to make implementation of calculateAcceleration
-agnostic to 'find neighbor' function while simultaneously not
-having to pass out array of forces
-
-callback takes in area of effect, position vector and list of affecting agents
-returns neighbors in affected area
-*/
-
 Agent.prototype.calculateNextAcceleration = function(callback, bounds){
   var resultantVector = new Vector(0, 0);
-
-  /* later allow for arbitrary or random forces that don't eminate from another agent*/
   var that = this;
   var neighbors;
   for ( var i = 0; i < this.forces.length; i++ ){
@@ -101,13 +95,11 @@ Agent.prototype.calculateNextAcceleration = function(callback, bounds){
     resultantVector = resultantVector.add(this.forces[i].calculate(that, neighbors).multiplyScalar(this.forces[i].strength)); //calculate vector and add to resultant vector
   }
   this.nextAcceleration = this.acceleration.add(resultantVector);
-  //if bounding function passed in then add to next acceleration
-  // if (bounds){
-  //   this.nextAcceleration = this.nextAcceleration.add(bounds(this));
-  // }
+
   if (this.nextAcceleration.magnitude() > this.accelerationLimit){
     this.nextAcceleration.unitVector(this.accelerationLimit);
   }
-
 };
 
+module.exports.Agent = Agent;
+module.exports.Swarm = Swarm;
