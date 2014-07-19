@@ -40,11 +40,12 @@ function animate() {
     // context.fillStyle = 'hsl('+ boid.acceleration.magnitude()*240 + ',100%,50%)';
     if(boid.type === 'bird'){
       context.fillStyle = '#00CC00';
+      context.fillRect(centerX, centerY, 2, 2);
     } else if ( boid.type === 'raptor' ){
-      context.fillStyle = 'red';
+      context.fillStyle = '#67C8FF';
+      context.fillRect(centerX, centerY, 3, 3);
     }
 
-    context.fillRect(centerX, centerY, 2, 2);
   }
 
   //update accelation of agents

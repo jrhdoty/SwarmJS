@@ -3,6 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "generic-quadtree": "^0.2.0"
+    "generic-quadtree": "^0.3.0"
   }
 }
