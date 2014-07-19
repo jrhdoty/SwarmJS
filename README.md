@@ -23,8 +23,14 @@ var matchHeading    = function(agent, neighbors){...};
 var separation      = function(agent, neighbors){...};
 var avoidBoundaries = function(){...};
 
-//define agent type
-//define area of effect and relative strength of each force
+/*
+define agent type, initial position and initial velocity
+for each force, define the following:
+  area of effect, 
+  relative strength,
+  agent that causes the force (most of the forces below are reflexive)
+  force function
+*/
 var opts = {
   type:     'boid',
   forces: 
@@ -64,7 +70,7 @@ while(size--){
 //instantiate new simulation with population and bounds
 window.swarm = new Swarm(population, 0, 0, window.innerWidth, window.innerHeight);
 
-//increment the simulation and render on each tick
+//increment the simulation, iterate over each agent and render on each tick
 var canvas = document.getElementById('myCanvas');
 canvas.width = window.innerWidth-20;
 canvas.height = window.innerHeight-20;
