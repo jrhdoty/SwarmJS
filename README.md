@@ -5,6 +5,8 @@ SwarmJS
 
 SwarmJS is a simple agent based modeling framework for creating 2D simulations of multi-agent systems that run in the browser.  It allows for the definition of multiple agent types and arbitrary forces that represent the interactions between them.  A quadtree is used for quick lookups of agents in the area of effect of a particular force.
 
+##Example
+
 An implementation of Craig Reynolds' Boids flocking simulation using this framework can be seen [here.](http://jrhdoty.github.io/SwarmJS/)  This example renders 1000 boids to html5 canvas at 60 fps.  The code for this example can be found in /examples/boids/boids.js
 
 ##Use
