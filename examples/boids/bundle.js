@@ -30,9 +30,9 @@ var raf       = require('raf');
   };
 
   var separation = function(agent, neighbors){
-    //match heading with neighbors
     var result = new Vector(0, 0);
     if(neighbors.length === 0 || neighbors === undefined){ return result; }
+    
     for (var i = 0; i < neighbors.length; i++) {
       result = result.add(agent.position.sub(neighbors[i].position)); //determine the repulsion vector and add to final result
     }
@@ -98,8 +98,7 @@ var raf       = require('raf');
   }
   window.swarm = new Swarm(population, 0, 0, window.innerWidth, window.innerHeight);
 }());
-
-
+  
 var canvas = document.getElementById('myCanvas');
 canvas.width = window.innerWidth-20;
 canvas.height = window.innerHeight-20;
@@ -111,7 +110,6 @@ function animate() {
   window.swarm.forEach(function(boid){
     var centerX = boid.position.left;
     var centerY = boid.position.top;
-    var radius = 10;
     context.beginPath();
     context.fillStyle = '#00CC00';
     context.fillRect(centerX, centerY, 2, 2);
@@ -119,7 +117,6 @@ function animate() {
   window.swarm.tick();
   raf(animate);
 }
-
 raf(animate());
 
 },{"../../index":2,"../../lib/vector":3,"raf":5}],2:[function(require,module,exports){
