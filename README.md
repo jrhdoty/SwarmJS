@@ -103,6 +103,16 @@ The list of all possible options are:
 - velocityLimit
 - accelerationLimit
 
+**Force**
+
+A force that is passed as an option to Agent contains the following
+- a list of agent types that cause the force
+- area of effect
+- relative strength
+- function that is passed the agent and all neighboring agents that are within the area of the effect and are of the same type as one of the causing agents
+
+Forces can use agents' position, velocity or acceleration vectors to determine what the returned resulting force will be for a particular force.
+
 **new Swarm(agents, originX, originY, width, height)**
 
 Instantiate a new swarm with an array of Agents and the bounds of the simulation
