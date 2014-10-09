@@ -1,22 +1,20 @@
 SwarmJS
 =======
 
-##Description
+###Description
 
 SwarmJS is a simple agent based modeling framework for creating 2D simulations of multi-agent systems that run in the browser.  It allows for the definition of multiple agent types and arbitrary forces that represent the interactions between them.  A quadtree is used for quick lookups of agents in the area of effect of a particular force.
 
-##Example
+###Example
 
 An implementation of Craig Reynolds' Boids flocking simulation using this framework can be seen [here.](http://jrhdoty.github.io/SwarmJS/)  This example renders 1000 boids to html5 canvas at 60 fps.  The code for this example can be found in /examples/boids/boids.js
 
-##Use
+###Installation
+```bower install swarm --save```
+
+###Use
 
 ``` javascript
-var Swarm     = require('../../index').Swarm;
-var Agent     = require('../../index').Agent;
-var Vector    = require('../../lib/vector');
-var raf       = require('raf');
-
 //define force functions
 var centerOfMass    = function(agent, neighbors){...};
 var matchHeading    = function(agent, neighbors){...};
@@ -58,7 +56,7 @@ var opts = {
     ],
 };
 
-//instantiate agents with options defined above with random initial position and velocity
+//instantiate agents with options and random initial position and velocity
 var population = [];
 var size = 1000;
 while(size--){
@@ -70,26 +68,14 @@ while(size--){
 //instantiate new simulation with population and bounds
 window.swarm = new Swarm(population, 0, 0, window.innerWidth, window.innerHeight);
 
-//increment the simulation, iterate over each agent and render on each tick
-var canvas = document.getElementById('myCanvas');
-canvas.width = window.innerWidth-20;
-canvas.height = window.innerHeight-20;
-var context = canvas.getContext('2d');
-
+//visualize your simulation 
 function animate() {
-  context.fillStyle = 'rgba(20,20,20,0.15)';
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  window.swarm.forEach(function(boid){
-    var centerX = boid.position.left;
-    var centerY = boid.position.top;
-    context.beginPath();
-    context.fillStyle = '#00CC00';
-    context.fillRect(centerX, centerY, 2, 2);
-  });
+  //make it pretty here
   window.swarm.tick();
-  raf(animate);
+  window.requestAnimationFrame(animate);
 }
-raf(animate());
+
+animate();
 ```
 
 **new Agent({options})**
@@ -124,3 +110,8 @@ Update the simulation by calculating the new acceleration, velocity and position
 **Swarm.forEach(callback)**
 
 Iterate over each agent in Swarm and pass it to the callback 
+
+###Contributing
+Pull requests are welcome.  Some desired areas are:
+- optimization
+- examples
