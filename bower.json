@@ -1,10 +1,22 @@
 {
-  "name": "quadtree",
-  "private": true,
+  "name": "swarm",
   "dependencies": {
     "chai": "~1.8.0",
     "mocha": "~1.14.0",
     "underscore": "~1.6.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "ignore": [
+    ".DS_Store",
+    ".git",
+    ".gitignore",
+    ".jshintrc",
+    ".Gulpfile.js",
+    ".npmignore",
+    "index.js",
+    "node_modules",
+    "package.json",
+    "src",
+    "test"
+  ]
 }
