@@ -1,11 +1,11 @@
 {
   "name": "swarm",
-  "dependencies": {
+  "dependencies": {},
+  "main": "swarm.js",
+  "devDependencies": {
     "chai": "~1.8.0",
     "mocha": "~1.14.0"
   },
-  "main": "swarm.js",
-  "devDependencies": {},
   "ignore": [
     ".DS_Store",
     ".editorconfig",
