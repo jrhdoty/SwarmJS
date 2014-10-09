@@ -115,3 +115,6 @@ Iterate over each agent in Swarm and pass it to the callback
 Pull requests are welcome.  Some desired areas are:
 - optimization
 - examples
+
+###Inspiration
+This library seeks to be a more general version of [Hughsk's Boids](https://github.com/hughsk/boids)
