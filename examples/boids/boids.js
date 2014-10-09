@@ -1,8 +1,3 @@
-var Swarm     = require('../../index').Swarm;
-var Agent     = require('../../index').Agent;
-var Vector    = require('../../lib/vector');
-var raf       = require('raf');
-
 (function(){
   'use strict';
   var centerOfMass = function(agent, neighbors){
@@ -114,6 +109,6 @@ function animate() {
     context.fillRect(centerX, centerY, 2, 2);
   });
   window.swarm.tick();
-  raf(animate);
+  window.requestAnimationFrame(animate);
 }
-raf(animate());
+animate();
