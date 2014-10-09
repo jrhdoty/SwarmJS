@@ -38,7 +38,7 @@
 //in this case our model will have a single agent, boid
 var opts = {
   type:     'boid',                //agent name
-  forces: forces,                  //array of forces
+  forces: forces,                  //array of forces that act on this agent type
   position: new Vector(100, 100),  //default position
   velocity:  new Vector(1, 1),     //default starting velocity
 };

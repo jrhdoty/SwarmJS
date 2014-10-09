@@ -8,6 +8,7 @@
   "devDependencies": {},
   "ignore": [
     ".DS_Store",
+    ".editorconfig",
     ".git",
     ".gitignore",
     ".jshintrc",
