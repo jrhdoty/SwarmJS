@@ -17,6 +17,7 @@
     "node_modules",
     "package.json",
     "src",
-    "test"
+    "test",
+    "Gulpfile.js"
   ]
 }
