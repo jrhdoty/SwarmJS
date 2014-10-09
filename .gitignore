@@ -1,0 +1,8 @@
+bower_components
+node_modules
+Resources
+.DS_Store
+.editorconfig
+.jshintrc
+npm-debug.log
+planning
