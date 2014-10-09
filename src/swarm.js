@@ -8,17 +8,28 @@ var Swarm = function(population, originX, originY, width, height){
 };
 
 Swarm.prototype.tick = function(){
-  for ( var i = 0; i < this.population.length; i++ ){
-    this.quadtree.insert(new Point(this.population[i].position.left, this.population[i].position.top), this.population[i]);
+  //insert agents into quadtree
+  var i, point, agent;
+  for ( i = 0; i < this.population.length; i++ ){
+    agent = this.population[i];
+    point = new Point(agent.position.left, agent.position.top);
+    this.quadtree.insert(point, agent);
   }
 
-  var that = this; 
-
+  //calculate the forces on and resulting acceleration of each agent
+  var that = this;
   for ( i = 0; i < this.population.length; i++ ){
-    this.population[i].calculateNextAcceleration(function(aoe, position, agents){
-      var neighbors = that.quadtree.queryRange(new Box(
-                new Point(position.left-aoe, position.top-aoe),
-                new Point(position.left+aoe, position.top+aoe)));
+    //the callback function here returns the set of agents that will cause an effect
+    //it is abstracted as a callback so we're not hardwired into using a quadtree
+    //for neighbor range lookup
+    this.population[i].calculateNextAcceleration(function recAcc(aoe, position, agents){
+      //get all agents with AoE
+      var aoeRange = new Box(
+                     new Point(position.left-aoe, position.top-aoe),
+                     new Point(position.left+aoe, position.top+aoe));
+      var neighbors = that.quadtree.queryRange(aoeRange);
+
+      //if agent is of the causing agent type
       var temp = [];
       for (var j = 0; j < neighbors.length; j++ ){
         if(agents.indexOf(neighbors[j].value.type) !== -1){
@@ -29,10 +40,12 @@ Swarm.prototype.tick = function(){
     });
   }
   //update acceleration velocity and position for each agent
+  //after we've calculated what the current forces being applied 
+  //to the agent are
   for( i = 0; i < this.population.length; i++ ){
     this.population[i].update();
   }
-  //clear quadtree
+  //reset our quadtree
   this.quadtree.clear();
 };
 
@@ -78,7 +91,7 @@ Agent.prototype.updateAcceleration = function(){
   }
 };
 
-Agent.prototype.calculateNextAcceleration = function(callback, bounds){
+Agent.prototype.calculateNextAcceleration = function(callback){
   var resultantVector = new Vector(0, 0);
   var that = this;
   var neighbors;
