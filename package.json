@@ -1,8 +1,35 @@
 {
-  "name": "quadtree",
-  "private": true,
+  "name": "SwarmJS",
   "version": "0.0.0",
+  "description": "an agent based modeling framework for the browser",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
   "dependencies": {
-    "generic-quadtree": "^0.3.0"
-  }
+    "generic-quadtree": "^0.3.0",
+    "raf": "^2.0.1",
+    "underscore": "^1.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jrhdoty/SwarmJS.git"
+  },
+  "keywords": [
+    "modeling",
+    "boids",
+    "flocking",
+    "abm",
+    "complexity"
+  ],
+  "author": "John Doty <github.com/jrhdoty>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jrhdoty/SwarmJS/issues"
+  },
+  "homepage": "https://github.com/jrhdoty/SwarmJS"
 }
